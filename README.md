@@ -22,7 +22,6 @@
    因此，直接构建即可
 
    要保证 [Qt version >= 5.13]
-
 ```
 
   - 或者 `-qmake TranslateEditor.pro`

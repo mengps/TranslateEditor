@@ -7,7 +7,6 @@ import an.document 1.0
 FramelessWindow {
     id: root
     visible: false
-    windowIcon: "qrc:/image/winIcon.png"
 
     property var fileNames: []
     property var lines: []
@@ -61,30 +60,41 @@ FramelessWindow {
             color: "#AA39C4FF"
             z: 100
 
-            MyButton {
-                id: closeButton
-                z: 100
-                width: 32
-                height: 32
+            Row {
+                id: controlButtons
+                width: 68
+                height: 40
                 anchors.right: parent.right
-                anchors.rightMargin: 6
                 anchors.top: parent.top
                 anchors.topMargin: 4
-                normalImage: "qrc:/image/close_normal.png"
-                pressedImage: "qrc:/image/close_down.png"
-                hoveredImage: "qrc:/image/close_hover.png"
 
-                onClicked: {
-                    root.visible = false;
+                MyButton {
+                    id: minButton
+                    width: 32
+                    height: 32
+                    normalImage: "qrc:/image/min_normal.png"
+                    pressedImage: "qrc:/image/min_down.png"
+                    hoveredImage: "qrc:/image/min_hover.png"
+
+                    onClicked: {
+                        root.showMinimized();
+                    }
                 }
 
-                MyToolTip {
-                    visible: parent.hovered
-                    text: qsTr("Close Window")
+                MyButton {
+                    id: closeButton
+                    width: 32
+                    height: 32
+                    normalImage: "qrc:/image/close_normal.png"
+                    pressedImage: "qrc:/image/close_down.png"
+                    hoveredImage: "qrc:/image/close_hover.png"
+
+                    onClicked: {
+                        root.visible = false;
+                    }
                 }
             }
         }
-
         Rectangle {
             anchors.fill: parent
             color: "#77ffffff"

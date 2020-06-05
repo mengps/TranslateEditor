@@ -12,7 +12,6 @@ FramelessWindow {
     width: 780
     height: 540
     title: qsTr("Translate Editor")
-    windowIcon: "qrc:/image/winIcon.png"
 
     property CodeWindow codeWindow: CodeWindow {
         width: 600
@@ -184,11 +183,6 @@ FramelessWindow {
                 onClicked: {
                     rootWindow.showMinimized();
                 }
-
-                MyToolTip {
-                    visible: parent.hovered
-                    text: qsTr("Minimize Window")
-                }
             }
 
             MyButton {
@@ -202,11 +196,6 @@ FramelessWindow {
                 onClicked: {
                     rootWindow.codeWindow.close();
                     rootWindow.close();
-                }
-
-                MyToolTip {
-                    visible: parent.hovered
-                    text: qsTr("Close Window")
                 }
             }
         }
@@ -331,7 +320,7 @@ FramelessWindow {
             interval: 800
             running: false
             onTriggered: {
-                codeWindow.opacity = 0;
+                codeWindow.visible = false;
             }
         }
 

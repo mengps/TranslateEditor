@@ -122,4 +122,6 @@ bool TsListModel::save(const QUrl &url)
         qDebug() << d->m_parser->lastError();
         return false;
     }
+
+    return true;
 }

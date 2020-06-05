@@ -169,12 +169,16 @@ bool TsParser::save(const QString &filename)
     m_tsWriter->writeAttribute("language", m_tsLanguage);
 
     if (m_result.count() > 0) {
-        QString currentName;
+        QString currentName = m_result[0]->name();
         m_tsWriter->writeStartElement("context");
+        m_tsWriter->writeTextElement("name", m_result[0]->name());
         for (int i = 0; i < m_result.count(); ++i) {
-            bool equal = currentName == m_result[i]->name();
-            if (!equal) {
+            if (currentName == m_result[i]->name()) {
+                //</context>
+                m_tsWriter->writeEndElement();
+                m_tsWriter->writeStartElement("context");
                 m_tsWriter->writeTextElement("name", m_result[i]->name());
+                currentName = m_result[i]->name();
             }
 
             m_tsWriter->writeStartElement("message");
@@ -195,12 +199,6 @@ bool TsParser::save(const QString &filename)
 
             //</message>
             m_tsWriter->writeEndElement();
-            if (!equal) {
-                currentName = m_result[i]->name();
-                //</context>
-                m_tsWriter->writeEndElement();
-                m_tsWriter->writeStartElement("context");
-            }
         }
     }
 

@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/background.png</file>
+        <file>image/close_down.png</file>
+        <file>image/close_hover.png</file>
+        <file>image/close_normal.png</file>
+        <file>image/min_down.png</file>
+        <file>image/min_hover.png</file>
+        <file>image/min_normal.png</file>
+        <file>image/winIcon.png</file>
+    </qresource>
+</RCC>

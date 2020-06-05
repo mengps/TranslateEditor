@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/MyToolTip.qml</file>
+        <file>qml/CodeButton.qml</file>
+        <file>qml/CodeWindow.qml</file>
+        <file>qml/MyTextArea.qml</file>
+        <file>qml/MyButton.qml</file>
+        <file>qml/ReelMenu.qml</file>
+        <file>qml/ReelAction.qml</file>
+        <file>qml/ReelSeparator.qml</file>
+    </qresource>
+</RCC>

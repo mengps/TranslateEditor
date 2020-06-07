@@ -1,5 +1,4 @@
 #include "framelesswindow.h"
-#include <QCoreApplication>
 
 static QRect MoveArea;
 
@@ -7,15 +6,15 @@ FramelessWindow::FramelessWindow(QWindow *parent)
     : QQuickWindow (parent)
 
 {
-    setFlags(flags() | Qt::Window | Qt::FramelessWindowHint);
-    setColor(Qt::transparent);
+   setFlags(flags() | Qt::Window | Qt::FramelessWindowHint);
+   setColor(Qt::transparent);
 
-    //在这里改变默认移动区域
-    //只有鼠标在移动区域内，才能移动窗口
-    MoveArea = {8, 8, width() - 16, 40};
-    connect(this, &QQuickWindow::widthChanged, this, [](int arg){
-        MoveArea.setWidth(arg - 16);
-    });
+   //在这里改变默认移动区域
+   //只有鼠标在移动区域内，才能移动窗口
+   MoveArea = { 8, 8, width() - 16, 40 };
+   connect(this, &QQuickWindow::widthChanged, this, [](int arg){
+       MoveArea.setWidth(arg - 16);
+   });
 }
 
 bool FramelessWindow::movable() const
@@ -44,20 +43,6 @@ void FramelessWindow::setResizable(bool arg)
     }
 }
 
-QString FramelessWindow::windowIcon() const
-{
-    return m_windowIcon;
-}
-
-void FramelessWindow::setWindowIcon(const QString &icon)
-{
-    if (m_windowIcon != icon) {
-        m_windowIcon = icon;
-        setIcon((QIcon(icon)));
-        emit windowIconChanged();
-    }
-}
-
 bool FramelessWindow::event(QEvent *event)
 {
     switch (event->type()) {
@@ -67,9 +52,8 @@ bool FramelessWindow::event(QEvent *event)
     case QEvent::Leave:
         emit exited();
         break;
-
     default:
-        return QQuickWindow::event(event);
+        break;
     }
 
     return QQuickWindow::event(event);
@@ -98,8 +82,7 @@ void FramelessWindow::mouseDoubleClickEvent(QMouseEvent *event)
         if (windowState() == Qt::WindowMaximized) {
             showNormal();
             m_currentArea = Client;
-        }
-        else if (windowState() == Qt::WindowNoState) {
+        } else if (windowState() == Qt::WindowNoState) {
             showMaximized();
             m_currentArea = Client;
         }

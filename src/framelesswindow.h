@@ -9,7 +9,6 @@ class FramelessWindow : public QQuickWindow
 
     Q_PROPERTY(bool movable READ movable WRITE setMovable NOTIFY movableChanged)
     Q_PROPERTY(bool resizable READ resizable WRITE setResizable NOTIFY resizableChanged)
-    Q_PROPERTY(QString windowIcon READ windowIcon WRITE setWindowIcon NOTIFY windowIconChanged)
 
     enum MouseArea {
         TopLeft = 1,
@@ -32,9 +31,6 @@ public:
 
     bool resizable() const;
     void setResizable(bool arg);
-
-    QString windowIcon() const;
-    void setWindowIcon(const QString &icon);
 
 protected:
     bool event(QEvent *event) override;

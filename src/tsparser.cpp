@@ -173,7 +173,7 @@ bool TsParser::save(const QString &filename)
         m_tsWriter->writeStartElement("context");
         m_tsWriter->writeTextElement("name", m_result[0]->name());
         for (int i = 0; i < m_result.count(); ++i) {
-            if (currentName == m_result[i]->name()) {
+            if (currentName != m_result[i]->name()) {
                 //</context>
                 m_tsWriter->writeEndElement();
                 m_tsWriter->writeStartElement("context");
@@ -194,8 +194,18 @@ bool TsParser::save(const QString &filename)
                 m_tsWriter->writeEndElement();
             }
             m_tsWriter->writeTextElement("source", m_result[i]->sourceText());
-            m_tsWriter->writeTextElement("translatorcomment", m_result[i]->commentsText());
-            m_tsWriter->writeTextElement("translation", m_result[i]->translateText());
+
+            if (!m_result[i]->commentsText().isEmpty())
+                m_tsWriter->writeTextElement("translatorcomment", m_result[i]->commentsText());
+
+            QString translateText = m_result[i]->translateText();
+            if (!translateText.isEmpty())
+                m_tsWriter->writeTextElement("translation", translateText);
+            else {
+                m_tsWriter->writeStartElement("translation");
+                m_tsWriter->writeAttribute("type", "unfinished");
+                m_tsWriter->writeEndElement();
+            }
 
             //</message>
             m_tsWriter->writeEndElement();

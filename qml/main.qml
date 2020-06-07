@@ -208,7 +208,7 @@ FramelessWindow {
                         title: qsTr("Please set the folder where qt is located")
                         folder: StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
                         onAccepted: {
-                            tsApi.location = fileApi.toString(locationDialog.folder);
+                            tsApi.location = fileApi.fileString(locationDialog.folder);
                         }
                     }
                 }

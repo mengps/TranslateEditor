@@ -1,5 +1,5 @@
 QT += quick
-CONFIG += c++11
+CONFIG += c++11 debug_and_release
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -16,6 +16,7 @@ HEADERS += \
     src/documenthelper.h \
     src/fileapi.h \
     src/framelesswindow.h \
+    src/translator.h \
     src/tsapi.h \
     src/tslistmodel.h \
     src/tsparser.h
@@ -25,6 +26,7 @@ SOURCES += \
     src/fileapi.cpp \
     src/framelesswindow.cpp \
     src/main.cpp \
+    src/translator.cpp \
     src/tsapi.cpp \
     src/tslistmodel.cpp \
     src/tsparser.cpp
@@ -34,7 +36,7 @@ RESOURCES += qml.qrc \
 
 RC_ICONS = image/winIcon.ico
 
-TRANSLATIONS += ./lang/TranslateEditor_zh_CN.ts
+TRANSLATIONS = ./lang/TranslateEditor_zh_CN.ts
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

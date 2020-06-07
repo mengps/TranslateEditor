@@ -12,7 +12,7 @@ public:
     Q_INVOKABLE void setCurrent(const QString &filename);
     Q_INVOKABLE QString openFile(const QString &filename);
     Q_INVOKABLE QString baseName(const QString &filename);
-    Q_INVOKABLE QString toString(const QUrl &filename);
+    Q_INVOKABLE QString fileString(const QUrl &filename);
     Q_INVOKABLE QString fileName(const QString &filename);
 
 private:

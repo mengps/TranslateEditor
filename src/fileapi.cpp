@@ -40,7 +40,7 @@ QString FileApi::baseName(const QString &filename)
     return QFileInfo(filename).baseName();
 }
 
-QString FileApi::toString(const QUrl &filename)
+QString FileApi::fileString(const QUrl &filename)
 {
     return QQmlFile::urlToLocalFileOrQrc(filename);
 }

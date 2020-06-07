@@ -106,6 +106,10 @@ bool TsListModel::load(const QUrl &url)
         qDebug() << d->m_parser->lastError();
         return false;
     } else {
+        /**
+         * 以打开的文档为当前工作目录
+         * 因为代码文件是相对路径
+         */
         FileApi::instance()->setCurrent(filename);
         d->m_parser->parser();
         beginResetModel();

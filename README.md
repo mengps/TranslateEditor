@@ -8,7 +8,7 @@
 
 ---
 
-### 效果预览 [GIF 12MB]
+### 效果预览 [GIF 22.3MB]
 
 ![Image text](preview/preview.gif) 
 
@@ -24,7 +24,14 @@
    要保证 [Qt version >= 5.13]
 ```
 
-  - 或者 `-qmake TranslateEditor.pro`
+或者: 
+
+```sh
+   qmake TranslateEditor.pro
+
+   make -f Makefile
+
+```
 
 --- 
 

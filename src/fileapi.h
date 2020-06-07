@@ -11,6 +11,8 @@ public:
 
     Q_INVOKABLE void setCurrent(const QString &filename);
     Q_INVOKABLE QString openFile(const QString &filename);
+    Q_INVOKABLE QString baseName(const QString &filename);
+    Q_INVOKABLE QString fileName(const QUrl &filename);
 
 private:
     FileApi();

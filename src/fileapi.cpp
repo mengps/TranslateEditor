@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QFile>
+#include <QQmlFile>
 
 FileApi::FileApi()
 {
@@ -18,7 +19,6 @@ FileApi *FileApi::instance()
 void FileApi::setCurrent(const QString &filename)
 {
     QDir::setCurrent(QFileInfo(filename).path());
-    qDebug() << QFileInfo(filename).path();
 }
 
 QString FileApi::openFile(const QString &filename)
@@ -33,4 +33,14 @@ QString FileApi::openFile(const QString &filename)
     file.close();
 
     return data;
+}
+
+QString FileApi::baseName(const QString &filename)
+{
+    return QFileInfo(filename).baseName();
+}
+
+QString FileApi::fileName(const QUrl &filename)
+{
+    return QQmlFile::urlToLocalFileOrQrc(filename);
 }

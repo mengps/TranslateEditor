@@ -11,7 +11,7 @@ class TsApi : public QObject
 public:
     static TsApi* instance();
 
-    Q_INVOKABLE void createQmFile(const QString &filename);
+    Q_INVOKABLE void createQmFile(const QString &tsName, const QString &qmName);
 
     QString location() const;
     void setLocation(const QString &loc);

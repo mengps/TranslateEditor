@@ -3,6 +3,7 @@ import QtQuick.Window 2.13
 import QtQuick.Controls 2.13
 import Qt.labs.platform 1.1
 //import QtQuick.XmlListModel 2.13
+import an.translate 1.0
 import an.window 1.0
 import an.model 1.0
 
@@ -11,6 +12,8 @@ FramelessWindow {
     visible: true
     width: 780
     height: 540
+    minimumWidth: 520
+    minimumHeight: 400
     title: qsTr("Translate Editor")
 
     property CodeWindow codeWindow: CodeWindow {
@@ -46,121 +49,210 @@ FramelessWindow {
         color: rootWindow.mainColor
         z: 100
 
-        ReelMenu {
-            id: fileMenu
-            menuWidth: 80
-            menuHeight: 34
-            reduceColor: Qt.lighter(rootWindow.mainColor, 1.3)
-            expandColor: reduceColor
-            text: qsTr("File")
+        Text {
+            id: fileText
             anchors {
                 left: parent.left
-                leftMargin: 50
+                leftMargin: 12
                 top: parent.top
-                topMargin: 8
+                topMargin: 16
             }
+            width: 200
+            height: 34
+            font.pointSize: 10
+            verticalAlignment: Text.AlignVCenter
+            text: fileApi.fileName(rootWindow.currentFile)
+            elide: Text.ElideRight
+        }
 
-            ReelSeparator {
-                color: "#fff"
-            }
+        Row {
+            width: children.length * 80 + (children.length - 1) * spacing
+            height: 34
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 20
 
-            ReelAction {
-                text: qsTr("Open [.ts]")
-                height: 34
-                color: hovered ? Qt.darker(parent.expandColor, 1.05)
-                               : parent.expandColor
-                onClicked: openDialog.open();
+            ReelMenu {
+                id: fileMenu
+                menuWidth: 80
+                menuHeight: 34
+                reduceColor: Qt.lighter(rootWindow.mainColor, 1.3)
+                expandColor: reduceColor
+                text: qsTr("File")
 
-                FileDialog {
-                    id: openDialog
-                    title: qsTr("Please choose a TS file")
-                    folder: StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
-                    nameFilters: [ qsTr("TS files (*.ts *.TS)") ]
-                    onAccepted: {
-                        if (tsModel.load(openDialog.file)) {
-                            adText.visible = true;
+                ReelSeparator {
+                    color: "#fff"
+                }
+
+                ReelAction {
+                    text: qsTr("Open [.ts]")
+                    height: 34
+                    color: hovered ? Qt.darker(parent.expandColor, 1.05)
+                                   : parent.expandColor
+                    onClicked: openDialog.open();
+
+                    FileDialog {
+                        id: openDialog
+                        title: qsTr("Please choose a TS file")
+                        folder: StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
+                        nameFilters: [ qsTr("TS files (*.ts *.TS)") ]
+                        onAccepted: {
+                            if (tsModel.load(file)) {
+                                adText.visible = true;
+                                rootWindow.currentFile = file;
+                                rootWindow.currentFolder = folder;
+                            }
+                        }
+                    }
+                }
+
+                ReelSeparator {
+                    color: "#fff"
+                }
+
+                ReelAction {
+                    text: qsTr("Save [.ts]")
+                    height: 34
+                    color: hovered ? Qt.darker(parent.expandColor, 1.05)
+                                   : parent.expandColor
+                    onClicked: saveDialog.open();
+
+                    FileDialog {
+                        id: saveDialog
+                        title: qsTr("Please Save to TS file")
+                        defaultSuffix: ".ts"
+                        fileMode: FileDialog.SaveFile
+                        folder: rootWindow.currentFolder.length == 0
+                                ? StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
+                                : rootWindow.currentFolder
+                        nameFilters: [ qsTr("TS files (*.ts *.TS)") ]
+                        onAccepted: {
                             rootWindow.currentFolder = folder;
+                            tsModel.save(saveDialog.file);
                         }
                     }
                 }
             }
 
-            ReelSeparator {
-                color: "#fff"
-            }
+            ReelMenu {
+                id: toolMenu
+                menuWidth: 80
+                menuHeight: 34
+                reduceColor: Qt.lighter(rootWindow.mainColor, 1.3)
+                expandColor: reduceColor
+                text: qsTr("Tool")
 
-            ReelAction {
-                text: qsTr("Save [.ts]")
-                height: 34
-                color: hovered ? Qt.darker(parent.expandColor, 1.05)
-                               : parent.expandColor
-                onClicked: saveDialog.open();
+                ReelSeparator {
+                    color: "#fff"
+                }
 
-                FileDialog {
-                    id: saveDialog
-                    title: qsTr("Please Save to TS file")
-                    fileMode: FileDialog.SaveFile
-                    folder: rootWindow.currentFolder.length == 0
-                            ? StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
-                            : rootWindow.currentFolder
-                    nameFilters: [ qsTr("TS files (*.ts *.TS)") ]
-                    onAccepted: {
-                        print(saveDialog.file)
-                        tsModel.save(saveDialog.file);
+                ReelAction {
+                    text: qsTr("Create [.qm]")
+                    height: 34
+                    color: hovered ? Qt.darker(parent.expandColor, 1.05)
+                                   : parent.expandColor
+
+                    onClicked: {
+                        createDialog.open();
+                    }
+
+                    FileDialog {
+                        id: createDialog
+                        title: qsTr("Please Create to qm file [lrelease.exe]")
+                        defaultSuffix: ".qm"
+                        fileMode: FileDialog.SaveFile
+                        folder: rootWindow.currentFolder.length == 0
+                                ? StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
+                                : rootWindow.currentFolder
+                        nameFilters: [ qsTr("QM files (*.qm *.QM)") ]
+                        onAccepted: {
+                            if (tsModel.save(rootWindow.currentFile)) {
+                                tsApi.createQmFile(rootWindow.currentFile, createDialog.file);
+                            }
+                        }
+                    }
+
+                    MyToolTip {
+                        visible: parent.hovered
+                        text: qsTr("Create as [.qm] file (release translation)")
                     }
                 }
             }
-        }
 
-        ReelMenu {
-            id: toolMenu
-            menuWidth: 80
-            menuHeight: 34
-            reduceColor: Qt.lighter(rootWindow.mainColor, 1.3)
-            expandColor: reduceColor
-            text: qsTr("Tool")
-            anchors {
-                left: fileMenu.right
-                leftMargin: 20
-                top: fileMenu.top
+            ReelMenu {
+                id: settingMenu
+                menuWidth: 80
+                menuHeight: 34
+                reduceColor: Qt.lighter(rootWindow.mainColor, 1.3)
+                expandColor: reduceColor
+                text: qsTr("Setting")
+
+                ReelSeparator {
+                    color: "#fff"
+                }
+
+                ReelAction {
+                    text: qsTr("Qt Location")
+                    height: 34
+                    color: hovered ? Qt.darker(parent.expandColor, 1.05)
+                                   : parent.expandColor
+                    onClicked: locationDialog.open();
+
+                    MyToolTip {
+                        visible: parent.hovered
+                        text: qsTr("Set the location of [Qt/linguest.exe]")
+                    }
+
+                    FolderDialog {
+                        id: locationDialog
+                        title: qsTr("Please set the folder where qt is located")
+                        folder: StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
+                        onAccepted: {
+                            tsApi.location = fileApi.toString(locationDialog.folder);
+                        }
+                    }
+                }
             }
 
-            ReelSeparator {
-                color: "#fff"
-            }
+            ReelMenu {
+                id: languageMenu
+                menuWidth: 80
+                menuHeight: 34
+                reduceColor: Qt.lighter(rootWindow.mainColor, 1.3)
+                expandColor: reduceColor
+                text: qsTr("Language")
 
-            ReelAction {
-                text: qsTr("Create [.qm]")
-                height: 34
-                color: hovered ? Qt.darker(parent.expandColor, 1.05)
-                               : parent.expandColor
-            }
-        }
+                property int language: Language.English
 
-        ReelMenu {
-            id: settingMenu
-            menuWidth: 80
-            menuHeight: 34
-            reduceColor: Qt.lighter(rootWindow.mainColor, 1.3)
-            expandColor: reduceColor
-            text: qsTr("Setting")
-            anchors {
-                left: toolMenu.right
-                leftMargin: 20
-                top: toolMenu.top
-            }
+                ReelSeparator {
+                    color: "#fff"
+                }
 
-            ReelSeparator {
-                color: "#fff"
-            }
+                ReelAction {
+                    text: qsTr("English") + (languageMenu.language == Language.English ? "√" : "")
+                    height: 34
+                    color: hovered ? Qt.darker(parent.expandColor, 1.05)
+                                   : parent.expandColor
+                    onClicked: {
+                        translator.loadLanguage(Language.English);
+                        languageMenu.language = Language.English;
+                    }
+                }
 
-            ReelAction {
-                text: qsTr("Qt Location")
-                height: 34
-                color: hovered ? Qt.darker(parent.expandColor, 1.05)
-                               : parent.expandColor
+                ReelSeparator {
+                    color: "#fff"
+                }
 
-
+                ReelAction {
+                    text: qsTr("Chinese") + (languageMenu.language == Language.Chinese ? "√" : "")
+                    height: 34
+                    color: hovered ? Qt.darker(parent.expandColor, 1.05)
+                                   : parent.expandColor
+                    onClicked: {
+                        translator.loadLanguage(Language.Chinese);
+                        languageMenu.language = Language.Chinese;
+                    }
+                }
             }
         }
 
@@ -251,10 +343,11 @@ FramelessWindow {
 
             Row {
                 anchors.fill: parent
-                spacing: -1
+                spacing: -2
 
                 Rectangle {
                     width: listView.detailWidth
+                    border.width: 2
                     border.color: listView.headerBorderColor
                     height: parent.height
                     color: listView.dataColor
@@ -266,7 +359,8 @@ FramelessWindow {
                 }
 
                 Rectangle {
-                    width: listView.columnWidth
+                    width: listView.columnWidth + 1
+                    border.width: 2
                     border.color: listView.headerBorderColor
                     height: parent.height
                     color: listView.dataColor
@@ -278,7 +372,8 @@ FramelessWindow {
                 }
 
                 Rectangle {
-                    width: listView.columnWidth
+                    width: listView.columnWidth + 1
+                    border.width: 2
                     border.color: listView.headerBorderColor
                     height: parent.height
                     color: listView.dataColor
@@ -290,7 +385,8 @@ FramelessWindow {
                 }
 
                 Rectangle {
-                    width: listView.columnWidth + 1
+                    width: listView.columnWidth + 2
+                    border.width: 2
                     border.color: listView.headerBorderColor
                     height: parent.height
                     color: listView.dataColor
@@ -302,7 +398,8 @@ FramelessWindow {
                 }
 
                 Rectangle {
-                    width: listView.columnWidth + 1
+                    width: listView.columnWidth + 2
+                    border.width: 2
                     border.color: listView.headerBorderColor
                     height: parent.height
                     color: listView.dataColor
@@ -333,7 +430,6 @@ FramelessWindow {
                 border.color: "gray"
                 width: listView.rowWidth
                 height: listView.rowHeight
-
                 /**
                  * 此MouseArea实现扩展行高度(粗略实现)
                  */
@@ -480,8 +576,7 @@ FramelessWindow {
                             text: translateText
                             readOnly: false
                             onEditingFinished: {
-                                if (text.length != 0)
-                                    tsModel.setData(index, text, TsModel.Translate);
+                                tsModel.setData(index, text, TsModel.Translate);
                             }
                         }
                     }
@@ -504,8 +599,7 @@ FramelessWindow {
                             text: commentsText
                             readOnly: false
                             onEditingFinished: {
-                                if (text.length != 0)
-                                    tsModel.setData(index, text, TsModel.Comment);
+                                tsModel.setData(index, text, TsModel.Comment);
                             }
                         }
                     }
@@ -531,7 +625,7 @@ FramelessWindow {
             property int rowWidth: width - scrollBar.width
             property int detailWidth: 100
             property int columnWidth: (width - detailWidth - scrollBar.width) / 4 + 1
-            property int rowHeight: 40
+            property int rowHeight: 45
             property color headerBorderColor: "#FF9968"
             property color dataColor: "#F2FEFF"
             property color dataBorderColor: "black"

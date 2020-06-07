@@ -60,6 +60,22 @@ FramelessWindow {
             color: "#AA39C4FF"
             z: 100
 
+            Text {
+                id: fileText
+                anchors {
+                    left: parent.left
+                    leftMargin: 10
+                    top: parent.top
+                    topMargin: 3
+                }
+                width: 200
+                height: 34
+                font.pointSize: 10
+                verticalAlignment: Text.AlignVCenter
+                text: fileApi.fileName(fileNames[0])
+                elide: Text.ElideRight
+            }
+
             Row {
                 id: controlButtons
                 width: 68
